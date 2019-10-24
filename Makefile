@@ -35,13 +35,28 @@ IJG_SRCS =\
 
 SRCS=$(IJG_SRCS) jpgglue.c jpgtranscode.c
 
-all: jpgsquash.js
+all: jpgsquash.js jpgsquash-simd.js transcode
 
 jpgsquash.js: $(SRCS) Makefile
 	emcc -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
 		-s EXPORTED_FUNCTIONS="['_jpg_transcode']" \
 		-Wno-shift-negative-value \
+		-O3 \
 		-o jpgsquash.js $(SRCS)
 
+jpgsquash-simd.js: $(SRCS) Makefile
+	emcc -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
+		-s EXPORTED_FUNCTIONS="['_jpg_transcode']" \
+		-Wno-shift-negative-value \
+		-O3 -msimd128 -s SIMD=1 \
+		-o jpgsquash-simd.js $(SRCS)
+
+
+
 transcode: $(SRCS) main.c
-	cc -o transcode $(SRCS) main.c
+	cc -o transcode -O3 $(SRCS) main.c
+
+clean:
+	rm -rf transcode
+	rm -rf jpgsquash*.js
+	rm -rf jpgsquash*.wasm
