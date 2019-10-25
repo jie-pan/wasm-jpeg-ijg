@@ -29,6 +29,18 @@ function transcode(filename, quality)
 
 }
 
+function decode(filename, quality)
+{
+    var imgAsArray = new Uint8Array(readbuffer(filename));
+    var len = imgAsArray.byteLength;
+    var buf = Module._malloc(len);
+    //Module.HEAPU8.set(new Uint8Array(imgAsArray), buf);
+    Module.HEAPU8.set(imgAsArray, buf);
+    var size = Module._jpg_decode(buf, len, quality);
+    //console.log("org size = " + len + ", new file size = " + size);
+
+}
+
 
 
 function onRuntimeInitialized() {
@@ -41,9 +53,10 @@ function onRuntimeInitialized() {
     for (var i = 0; i < filelist.length; i++) {
         filename = dirname + filelist[i];
 
-        for (var j = 0; j < 5; j++)
+        for (var j = 0; j < 50; j++)
         {
-            transcode(filename, quality);
+            //transcode(filename, quality);
+            decode(filename, quality);
         }
     }
 }

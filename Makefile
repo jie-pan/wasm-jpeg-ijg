@@ -39,14 +39,14 @@ all: jpgsquash.js jpgsquash-simd.js transcode
 
 jpgsquash.js: $(SRCS) Makefile
 	emcc -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
-		-s EXPORTED_FUNCTIONS="['_jpg_transcode']" \
+		-s EXPORTED_FUNCTIONS="['_jpg_transcode', '_jpg_decode']" \
 		-Wno-shift-negative-value \
 		-O3 -g \
 		-o jpgsquash.js $(SRCS)
 
 jpgsquash-simd.js: $(SRCS) Makefile
 	emcc -s WASM=1 -s ALLOW_MEMORY_GROWTH=1 \
-		-s EXPORTED_FUNCTIONS="['_jpg_transcode']" \
+		-s EXPORTED_FUNCTIONS="['_jpg_transcode', '_jpg_decode']" \
 		-Wno-shift-negative-value \
 		-O3 -g -msimd128 -s SIMD=1 \
 		-o jpgsquash-simd.js $(SRCS)

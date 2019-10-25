@@ -51,3 +51,24 @@ jpg_transcode(unsigned char *buffer, int len, int quality) {
 
     return ip.ip_ReCompSize;
 }
+int
+jpg_decode(unsigned char *buffer, int len, int quality) {
+    void          *out;
+    IJG_Private   ip;
+
+    // get sizes
+    jpeg_memory_dimensions(buffer, len, &ip.ip_Width, &ip.ip_Height);
+    out = malloc(ip.ip_Width * ip.ip_Height * 4);
+    if (out == NULL)
+      return 0;
+    ip.ip_SrcBuf = buffer;
+    ip.ip_SrcLen = len;
+    ip.ip_DstBuf = out;
+    ip.ip_CompBuf = NULL;
+    ip.ip_CompSize = 0;
+
+    load_jpeg_data(&ip);
+    free(out);
+
+    return *((unsigned char*)out);
+}
