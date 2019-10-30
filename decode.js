@@ -49,7 +49,7 @@ function onRuntimeInitialized() {
     var quality = 100;
     var dirname="images/"
     
-
+    var start = performance.now();
     for (var i = 0; i < filelist.length; i++) {
         filename = dirname + filelist[i];
 
@@ -59,5 +59,8 @@ function onRuntimeInitialized() {
             decode(filename, quality);
         }
     }
+    var timeused = performance.now() - start;
+
+    console.log(timeused);
 }
 
